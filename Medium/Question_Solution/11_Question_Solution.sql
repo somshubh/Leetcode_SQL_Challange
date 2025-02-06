@@ -62,11 +62,14 @@
 -- Singing is performed by 2 friends (Victor J. and Jade W.)
 
 -- Solution
-
+use [Leetcode_Challange];
 with cte as(
  select *,
  COUNT(*) over(partition by activity) as cnt
  from friends
  )
- select distinct activity from friends where id in( select id from cte where cnt< (select max(cnt) from cte))
- and id in( select id from cte where cnt> (select min(cnt) from cte));
+ select distinct activity from friends where id in( select id from cte where cnt not in(
+  select max(cnt) from cte
+  union 
+  select min(cnt) from cte))
+
